@@ -1,0 +1,59 @@
+identifier.l
+
+
+%{
+#include<stdio.h>
+#include "y.tab.h"
+%}
+
+%%
+[a-zA-z] {return(LETTER);}
+[0-9] {return(DIGIT);}
+[\n] {return(NL);}
+[ _] {return(UND);}
+. {return(yytext[0]);}
+%%
+
+int yywrap() 
+{ 
+return 1;
+}
+
+-----------------------------------------------------------------------------------------------
+identifier.y:
+
+
+%{
+#include<stdio.h>
+#include<stdlib.h>
+int yylex();
+void yyerror(char *s);
+%}
+
+%token DIGIT LETTER NL UND
+
+%%
+stmt: variable NL {printf("Valid identifier"); exit(0);};
+variable: LETTER alphanumeric;
+alphanumeric: LETTER alphanumeric | DIGIT alphanumeric | UND alphanumeric | LETTER | DIGIT | UND;
+%%
+
+void yyerror(char *msg)
+{
+printf("Invalid expression: %s", msg);
+}
+
+void main()
+{
+printf("Enter the name of a variable: ");
+yyparse();
+}
+
+
+----------------------------------------------------------------------------------------------
+Steps for output:
+
+lex identifier.l
+yacc -d identifier.y
+gcc lex.yy.c y.tab.c -lfl
+./a.out

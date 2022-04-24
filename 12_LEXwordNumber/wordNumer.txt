@@ -1,0 +1,22 @@
+%{
+#include<stdio.h>
+
+%}
+
+%%
+
+[0-9]+ {printf("Number");}
+[a-zA-Z]+ {printf("word");}
+
+
+%%
+int main(){
+    yylex();
+    return 0;
+}
+
+---------------------------------------------------------------------------------------------
+For output: steps are
+lex fileName.l
+gcc lex.yy.c -lfl
+./a.out
